@@ -235,6 +235,12 @@ rabbitmqctl set_permissions -p / reddit ".*" ".*" ".*"
 ###############################################################################
 # Install and configure the reddit code
 ###############################################################################
+# ensure the template directory exists and is writable by the reddit user
+if [ ! -d /var/opt/reddit ]; then
+    mkdir -p /var/opt/reddit
+fi
+chown $REDDIT_USER:$REDDIT_GROUP /var/opt/reddit
+
 cd $REDDIT_HOME/reddit/r2
 sudo -u $REDDIT_OWNER make pyx # generate the .c files from .pyx
 sudo -u $REDDIT_OWNER python setup.py build
@@ -273,6 +279,9 @@ domain = $REDDIT_DOMAIN
 
 [server:main]
 port = 8001
+
+[app:main]
+cache_dir = /var/opt/reddit/
 DEVELOPMENT
     chown $REDDIT_OWNER development.update
 fi
@@ -293,6 +302,9 @@ domain = $REDDIT_DOMAIN
 
 [server:main]
 port = 8001
+
+[app:main]
+cache_dir = /var/opt/reddit/
 PRODUCTION
     chown $REDDIT_OWNER production.update
 fi
