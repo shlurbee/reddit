@@ -392,6 +392,11 @@ class ApiController(RedditController, OAuth2ResourceController):
         if save:
             r = l._save(c.user)
 
+        # GOLDBOT: force comment tree refresh show comments show up right away
+        if (hasattr(link, "comment_tree_version")): # FIXME: should this check be done further in?
+          from r2.lib.comment_tree import get_comment_tree
+          dummy = get_comment_tree(link, _update=True) 
+
         #set the ratelimiter
         if should_ratelimit:
             c.user.clog_quota('link', l)

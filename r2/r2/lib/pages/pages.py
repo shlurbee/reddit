@@ -1189,6 +1189,9 @@ class CommentPane(Templated):
         timer.intermediate("try_cache")
         cache_hit = False
 
+        # GOLDBOT: don't use cached comments
+        try_cache = False
+
         if try_cache:
             # try to fetch the comment tree from the cache
             key = self.cache_key()
